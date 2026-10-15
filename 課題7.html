@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>自動販売機アプリ</title>
+    <style>
+        body {
+            background-color: #dabbbb;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px 0;
+            font-family: sans-serif;
+        }
+
+        .vending-machine {
+            background-color: #0ed13e;
+            width: 380px;
+            padding: 30px 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .title {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .display {
+            background-color: rgb(245, 50, 50);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px 10px;
+            padding: 20px 10px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            width: 30%;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .product-card .name {
+            font-size: 14px;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .buy-btn {
+            background-color: #ffd54f;
+            border: none;
+            border-radius: 15px;
+            padding: 5px 10px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #c7a500;
+        }
+
+        .buy-btn:active {
+            box-shadow: none;
+            transform: translateY(2px);
+        }
+
+        .control-panel {
+            background-color: #33ecaf;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .insert-btn {
+            background-color: #ffd54f;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .return-btn {
+            background-color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .money-display {
+            background-color: #222;
+            color: #00ff66;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .message-display {
+            background-color: white;
+            clear: #333;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-width: bold;
+        }
+
+        .buy-btn:disabled {
+            background-color: gray;
+            color: white;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .control-panel {
+            flex-wrap: wrap;
+        }
+
+        .restock-btn {
+            background-color: #4d8cff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .restock-btn:active {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="vending-machine">
+        <h1 class="title">🎆 お祭りフード自動販売機 🎆</h1>
+        <div class="money-display">
+            現在の投入金額:<span id="money">0</span>円
+        </div>
+        <div class="money-display">売上：<span id="sales">0</span>円</div>
+        <div class="message-display">
+            <span id="message">お金を入れてください。</span>
+        </div>
+        <div class="display">
+            <div class="product-card">
+                <img src="お好み焼き.jpg" alt="">
+                <p class="name">お好み焼き</p>
+                <p>在庫:<span id="stock-okonomiyaki">3</span>個</p>
+                <button id="btn-okonomiyaki" class="buy-btn" onclick="buy('お好み焼き', 400,'okonomiyaki')">400円</button>
+            </div>
+            <div class="product-card">
+                <img src="焼きそば.jpg" alt="">
+                <p class="name">焼きそば</p>
+                <p>在庫:<span id="stock-yakisoba">3</span>個</p>
+                <button id="btn-yakisoba" class="buy-btn" onclick="buy('焼きそば', 440,'yakisoba')">440円</button>
+            </div>
+            <div class="product-card">
+                <img src="たこ焼き.jpg" alt="">
+                <p class="name">たこ焼き</p>
+                <p>在庫:<span id="stock-takoyaki">3</span>個</p>
+                <button id="btn-takoyaki" class="buy-btn" onclick="buy('たこ焼き', 460,'takoyaki')">460円</button>
+            </div>
+            <div class="product-card">
+                <img src="からあげ.jpg" alt="からあげ">
+                <p class="name">からあげ</p>
+                <p>在庫：<span id="stock-karaage">3</span>個</p>
+                <button id="btn-karaage" class="buy-btn" onclick="buy('からあげ', 350, 'karaage')">
+                    350円
+                </button>
+            </div>
+
+            <div class="product-card">
+                <img src="フランクフルト.jpg" alt="フランクフルト">
+                <p class="name">フランクフルト</p>
+                <p>在庫：<span id="stock-frankfurt">3</span>個</p>
+                <button id="btn-frankfurt" class="buy-btn" onclick="buy('フランクフルト', 300, 'frankfurt')">
+                    300円
+                </button>
+            </div>
+
+            <div class="product-card">
+                <img src="たい焼き.jpg" alt="たい焼き">
+                <p class="name">たい焼き</p>
+                <p>在庫：<span id="stock-taiyaki">3</span>個</p>
+                <button id="btn-taiyaki" class="buy-btn" onclick="buy('たい焼き', 250, 'taiyaki')">
+                    250円
+                </button>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <button class="return-btn" onclick="returnMoney()">返却</button>
+            <button class="insert-btn" onclick="addMoney(100)">100円</button>
+            <button class="insert-btn" onclick="addMoney(500)">500円</button>
+            <button class="insert-btn" onclick="addMoney(1000)">1000円</button>
+
+            <button class="restock-btn" onclick="restock()">在庫を補充</button>
+        </div>
+    </div>
+    <script>
+        let totalAmount = 0;
+        let sales = 0;
+        const stocks = {
+            okonomiyaki: 3,
+            yakisoba: 3,
+            takoyaki: 3,
+            karaage: 3,
+            frankfurt: 3,
+            taiyaki: 3
+        };
+        function addMoney(money) {
+            totalAmount += money;
+            document.getElementById("message").textContent = `${money}円を投入しました。`;
+            render();
+        }
+        function buy(name, price, productId) {
+            if (stocks[productId] <= 0) {
+                document.getElementById("message").textContent = `${name}は売り切れです。`;
+                return;
+            }
+            if (totalAmount >= price) {
+                totalAmount -= price;
+                sales += price;
+                stocks[productId]--;
+
+                document.getElementById("message").textContent = `${name}を購入しました！`;
+
+                let audio = new Audio("自販機音.mp3");
+                audio.play();
+            } else {
+                document.getElementById("message").textContent = `お金が足りません！（あと${price - totalAmount}円必要）`;
+            }
+            render();
+        }
+        function returnMoney() {
+            document.getElementById("message").textContent = `${totalAmount}円を返却しました。`;
+            totalAmount = 0;
+            render();
+        }
+        function restock() {
+            stocks.okonomiyaki = 3;
+            stocks.yakisoba = 3;
+            stocks.takoyaki = 3;
+            stocks.karaage = 3;
+            stocks.frankfurt = 3;
+            stocks.taiyaki = 3;
+
+            document.getElementById("message").textContent =
+                "すべての商品を3個ずつ補充しました。";
+
+            render();
+        }
+        function render() {
+            document.getElementById("money").textContent = totalAmount;
+            document.getElementById("sales").textContent = sales;
+
+            // お好み焼き
+            if (stocks.okonomiyaki <= 0) {
+                document.getElementById("stock-okonomiyaki").textContent = "売り切れ";
+                document.getElementById("btn-okonomiyaki").disabled = true;
+            } else {
+                document.getElementById("stock-okonomiyaki").textContent =
+                    stocks.okonomiyaki;
+                document.getElementById("btn-okonomiyaki").disabled = false;
+            }
+
+            // 焼きそば
+            if (stocks.yakisoba <= 0) {
+                document.getElementById("stock-yakisoba").textContent = "売り切れ";
+                document.getElementById("btn-yakisoba").disabled = true;
+            } else {
+                document.getElementById("stock-yakisoba").textContent =
+                    stocks.yakisoba;
+                document.getElementById("btn-yakisoba").disabled = false;
+            }
+
+            // たこ焼き
+            if (stocks.takoyaki <= 0) {
+                document.getElementById("stock-takoyaki").textContent = "売り切れ";
+                document.getElementById("btn-takoyaki").disabled = true;
+            } else {
+                document.getElementById("stock-takoyaki").textContent =
+                    stocks.takoyaki;
+                document.getElementById("btn-takoyaki").disabled = false;
+            }
+
+            // からあげ
+            if (stocks.karaage <= 0) {
+                document.getElementById("stock-karaage").textContent = "売り切れ";
+                document.getElementById("btn-karaage").disabled = true;
+            } else {
+                document.getElementById("stock-karaage").textContent =
+                    stocks.karaage;
+                document.getElementById("btn-karaage").disabled = false;
+            }
+
+            // フランクフルト
+            if (stocks.frankfurt <= 0) {
+                document.getElementById("stock-frankfurt").textContent = "売り切れ";
+                document.getElementById("btn-frankfurt").disabled = true;
+            } else {
+                document.getElementById("stock-frankfurt").textContent =
+                    stocks.frankfurt;
+                document.getElementById("btn-frankfurt").disabled = false;
+            }
+
+            // たい焼き
+            if (stocks.taiyaki <= 0) {
+                document.getElementById("stock-taiyaki").textContent = "売り切れ";
+                document.getElementById("btn-taiyaki").disabled = true;
+            } else {
+                document.getElementById("stock-taiyaki").textContent =
+                    stocks.taiyaki;
+                document.getElementById("btn-taiyaki").disabled = false;
+            }
+
+            console.log(`現在の合計金額: ${totalAmount}円`);
+        }
+        render();
+    </script>
+</body>
+</html>
